@@ -1,0 +1,66 @@
+name: wdl-check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  miniwdl_check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.9
+    - name: Install miniwdl
+      run: |
+        python -m pip install --upgrade pip
+        pip3 install miniwdl
+    - name: Run miniwdl
+      run: |
+        EXITCODE=0
+        echo "Checking WDL files using \`miniwdl check\`."
+        files=$(find . -name '*.wdl')
+        for file in $files; do
+          echo "  [***] $file [***]"
+          miniwdl check "$file"
+          EXITCODE=$(($? || EXITCODE))
+        done
+        exit $EXITCODE
+  womtool_check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.9
+    - name: Install Cromwell and Womtool
+      run: |
+        conda update -n base -c defaults conda
+        conda install -c conda-forge cromwell
+    - name: Validate wdls with Womtool
+      run: |
+        EXITCODE=0
+        echo "Checking WDL files using \`womtool validate\`."
+        files=$(find . -name '*.wdl')
+        for file in $files; do
+          echo "  [***] $file [***]"
+          $CONDA/bin/womtool validate "$file"
+          EXITCODE=$(($? || EXITCODE))
+        done
+        exit $EXITCODE
+  sprocket-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Update Rust
+      run: rustup update nightly && rustup default nightly 
+    - name: Install sprocket
+      run: cargo install sprocket
+    - name: Validate wdls with Sprocket
+      run: |
+        EXITCODE=0
+        echo "Checking WDL files using \`sprocket lint\`."
