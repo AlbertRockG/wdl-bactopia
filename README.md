@@ -1,3 +1,6 @@
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/AlbertRockG/wdl-bactopia)
+
+
 # workflow-template-wdl
 
 This repository is a template WDL respository.
