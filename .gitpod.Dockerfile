@@ -7,6 +7,7 @@ USER root
 
 ENV TZ=UTC
 ENV DEBIAN_FRONTEND=noninteractive
+ENV DOCKER_ALLOW_IPV6_ON_IPV4_INTERFACE=1
 
 # Set the timezone
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
