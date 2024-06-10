@@ -24,6 +24,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     lsb-release \
     gcc \
+    g++ \
+    make \
+    libc6-dev \
+    pkg-config \
+    libssl-dev \
+    libpq-dev \
     mono-mcs \
     && rm -rf /var/lib/apt/lists/*
 
